@@ -44,23 +44,25 @@ namespace VueLogin.Controllers
 
         public IActionResult Login()
         {
-            return View("Login");
+            return View();
         }
 
         public IActionResult Register()
         {
-            return View("Register");
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody]UserLogin userLogin)
+        public async Task<IActionResult> Login(UserLogin userLogin)
         {
             User user = await usermanager.FindByEmailAsync(userLogin.Email);
             Microsoft.AspNetCore.Identity.SignInResult result;
 
             if (ModelState.IsValid && (result = await signInManager.PasswordSignInAsync(user, userLogin.Password, false, false)).Succeeded)
             {
-                return View("~/Home/Index");
+                //return RedirectToAction("Index","Home");
+                //return Redirect("~/Home/Index");
+                return RedirectToAction("Index", "Home");
             }
 
             return View("Login");
@@ -68,7 +70,7 @@ namespace VueLogin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] UserLogin userLogin)
+        public async Task<IActionResult> Register(UserLogin userLogin)
         {
             User user = await usermanager.FindByEmailAsync(userLogin.Email);
 
@@ -78,30 +80,25 @@ namespace VueLogin.Controllers
                 var data = usermanager.CreateAsync(user, userLogin.Password).Result;
                 data = usermanager.AddToRoleAsync(user, "User").Result;
 
-                Microsoft.AspNetCore.Identity.SignInResult result;
-
                 await signInManager.PasswordSignInAsync(user, userLogin.Password, false, false);
 
                 //if (ModelState.IsValid && (result = ).Succeeded)
                 //{
                 //    return RedirectToAction("Index", "Privacy");
                 //}
-
-                return View("~/Home/Index");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
-                Message message = new Message();
-                message.Text = "User Already Exists. Please Login.";
-
-                return View("Register", message);
+                ViewBag.Message = "User Already Exists! Please Log In.";
+                return View("Register");
             }
         }
 
         public async Task<IActionResult> LogOut()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("Login");
+            return RedirectToAction("Login","Account");
 
         }
     }

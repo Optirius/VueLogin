@@ -20,16 +20,32 @@ namespace VueLogin.Controllers
             _logger = logger;
         }
 
-        [Authorize(Roles = "Admin")]
+
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+
         }
 
-        [Authorize(Roles = "Admin")]
+
         public IActionResult Privacy()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
