@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>UserList</h1>
+
+@*<p>
+        <a asp-action="UserList">UserList</a>
+    </p>*@
+
+<div id="UserList">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="m in model">
+                <td>{{m.username}}</td>
+                <td>{{m.email}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+@{
+    await Html.RenderPartialAsync("_Externalcdns");
+}
+
+<script>
+    new Vue({
+        el: "#UserList",
+
+        data: {
+            model: {
+                username: "",
+                email: ""
+            }
+        },
+
+        created() {
+            axios.get("/Account/GetUserList")
+                .then(res => {
+                    this.model = res.data;
+                })
+        },
+    });
+
+</script>

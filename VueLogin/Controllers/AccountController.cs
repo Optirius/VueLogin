@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VueLogin.BindingModel;
+using VueLogin.Data;
 using VueLogin.Models;
 
 namespace VueLogin.Controllers
@@ -14,7 +15,8 @@ namespace VueLogin.Controllers
 
         public UserManager<User> usermanager;
         public RoleManager<IdentityRole<Guid>> roleManager;
-        public SignInManager<User> signInManager; 
+        public SignInManager<User> signInManager;
+        public ApplicationDbContext applicationDbContext;
 
 
         public AccountController(UserManager<User> usermanager, RoleManager<IdentityRole<Guid>> roleManager, SignInManager<User> signInManager)
@@ -50,6 +52,16 @@ namespace VueLogin.Controllers
         public IActionResult Register()
         {
             return View();
+        }
+
+        public IActionResult UserList()
+        {
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return View();
+            }
+
+            return RedirectToAction("Login", "Account");
         }
 
         [HttpPost]
@@ -100,6 +112,12 @@ namespace VueLogin.Controllers
             await signInManager.SignOutAsync();
             return RedirectToAction("Login","Account");
 
+        }
+
+        [HttpGet]
+        public IQueryable<User> GetUserList()
+        {
+            return usermanager.Users;
         }
     }
 }

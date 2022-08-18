@@ -24,6 +24,7 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Register" class="btn btn-primary"  @@click="register"/>
+                @*<input type="button" @@click="getuserlist"/>*@
             </div>
         </form>
     </div>
@@ -79,7 +80,15 @@
                     this.warningmessage = "Passwords do not match!";
                 }
 
-            }
+            },
+
+            //getuserlist: function () {
+            //    axios.get("/Account/GetUserList").then(response => {
+            //            console.log(response);
+            //    }).catch(function (error) {
+            //            console.log(error);
+            //    });
+            //}
 
         },
     });
