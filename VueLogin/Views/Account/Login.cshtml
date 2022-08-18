@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ var role = User.IsInRole("Admin");}
+
+<h1>Login</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="Login">
+
+            <div class="form-group">
+                <label for="Email" class="control-label"></label>
+                <input v-model="email" type="text" name="Email" class="form-control" />
+
+            </div>
+            <div class="form-group">
+                <label for="Password" class="control-label"></label>
+                <input v-model="password" type="password" name="Password" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-primary" @@click="login" />
+            </div>
+
+            <h1>{{message}}</h1>
+        </form>
+    </div>
+</div>
+
+@*<div>
+    <a asp-action="Index">Back to List</a>
+</div>*@
+
+
+
+@{
+    await Html.RenderPartialAsync("_Externalcdns");
+}
+
+<script>
+
+    new Vue({
+        el: "#Login",
+
+        data: {
+            email: "",
+            password: "",
+            message: ""
+        },
+
+        created: function () {
+            debugger;
+            if("@role" == "True")
+            {
+                this.message = "Admin Detected!"
+            }
+        },
+
+        methods: {
+            login: function () {
+                //debugger;
+                //console.info(this.name, this.price);
+
+                axios.post("/Account/Login", {
+                    Email: this.email,
+                    Password: this.password,
+                });
+
+            }
+
+        },
+    });
+
+</script>
